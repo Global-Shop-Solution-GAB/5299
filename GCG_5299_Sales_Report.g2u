@@ -1,0 +1,565 @@
+Program.Sub.ScreenSU.Start
+Gui.Form..Create
+Gui.Form..Caption("Sales Report")
+Gui.Form..Size(20625,10950)
+Gui.Form..MinX(0)
+Gui.Form..MinY(0)
+Gui.Form..Position(0,0)
+Gui.Form..BackColor(-2147483633)
+Gui.Form..MousePointer(0)
+Gui.Form..Event(UnLoad,Form_UnLoad)
+Gui.Form.dtpStartDate.Create(DatePicker)
+Gui.Form.dtpStartDate.Size(1530,285)
+Gui.Form.dtpStartDate.Position(105,540)
+Gui.Form.dtpStartDate.TabStop(True)
+Gui.Form.dtpStartDate.TabIndex(1)
+Gui.Form.lbl1.Create(Label,"Start Date",True,1500,255,0,105,300,True,0,"Arial",8,-2147483633,0)
+Gui.Form.lbl2.Create(Label,"End Date",True,1305,255,0,1785,300,True,0,"Arial",8,-2147483633,0)
+Gui.Form.dtpEndDate.Create(DatePicker)
+Gui.Form.dtpEndDate.Size(1350,285)
+Gui.Form.dtpEndDate.Position(1785,540)
+Gui.Form.dtpEndDate.TabStop(True)
+Gui.Form.dtpEndDate.TabIndex(2)
+Gui.Form.lblSalesRepID.Create(Label,"Start Vendor",True,1020,255,0,105,960,True,0,"Arial",8,-2147483633,0)
+Gui.Form.lblSalesRepName.Create(Label,"Name",True,1110,255,0,1125,960,True,0,"Arial",8,-2147483633,0)
+Gui.Form.txtStart.Create(TextBox,"",True,660,300,0,105,1170,True,0,"Arial",8,-2147483643,1)
+Gui.Form.txtStart.TabStop(True)
+Gui.Form.txtStart.TabIndex(3)
+Gui.Form.txtStart.MaxLength(6)
+Gui.Form.txtStartName.Create(TextBox,"",True,1740,300,0,870,1170,True,0,"Arial",8,-2147483643,1)
+Gui.Form.txtStartName.TabStop(True)
+Gui.Form.txtStartName.TabIndex(4)
+Gui.Form.cmdBrowseStart.Create(Button)
+Gui.Form.cmdBrowseStart.Size(465,330)
+Gui.Form.cmdBrowseStart.Position(2670,1140)
+Gui.Form.cmdBrowseStart.Caption("^")
+Gui.Form.cmdBrowseStart.Event(Click,cmdBrowseStart_Click)
+Gui.Form.cmdBrowseStart.TabStop(True)
+Gui.Form.cmdBrowseStart.TabIndex(5)
+Gui.Form.cmdRunReport.Create(Button)
+Gui.Form.cmdRunReport.Size(1455,375)
+Gui.Form.cmdRunReport.Position(4830,105)
+Gui.Form.cmdRunReport.Caption("Run Report")
+Gui.Form.cmdRunReport.TabStop(True)
+Gui.Form.cmdRunReport.TabIndex(7)
+Gui.Form.cmdRunReport.Event(Click,cmdRunReport_Click)
+Gui.Form.gsRpt.Create(GsGridControl)
+Gui.Form.gsRpt.Size(17025,9810)
+Gui.Form.gsRpt.Position(3375,540)
+Gui.Form.gsRpt.TabStop(True)
+Gui.Form.gsRpt.TabIndex(9)
+Gui.Form.chkCrystal.Create(CheckBox)
+Gui.Form.chkCrystal.Size(1440,360)
+Gui.Form.chkCrystal.Position(3360,150)
+Gui.Form.chkCrystal.Caption("Crystal Report")
+Gui.Form.chkCrystal.TabStop(True)
+Gui.Form.chkCrystal.TabIndex(6)
+Gui.Form.cmdExportExcel.Create(Button)
+Gui.Form.cmdExportExcel.Size(1470,375)
+Gui.Form.cmdExportExcel.Position(6435,105)
+Gui.Form.cmdExportExcel.TabStop(True)
+Gui.Form.cmdExportExcel.TabIndex(8)
+Gui.Form.cmdExportExcel.Caption("Export Excel")
+Gui.Form.cmdExportExcel.Event(Click,cmdExportExcel_Click)
+Gui.Form.chkAllVendor.Create(CheckBox)
+Gui.Form.chkAllVendor.Size(1410,360)
+Gui.Form.chkAllVendor.Position(915,2295)
+Gui.Form.chkAllVendor.Caption("All Vendors")
+Gui.Form.lblSalesRepID2.Create(Label,"End Vendor",True,945,255,0,105,1620,True,0,"Arial",8,-2147483633,0)
+Gui.Form.lblSalesRepName2.Create(Label,"Name",True,1110,255,0,1125,1620,True,0,"Arial",8,-2147483633,0)
+Gui.Form.txtEnd.Create(TextBox,"",True,660,300,0,105,1830,True,0,"Arial",8,-2147483643,1)
+Gui.Form.txtEnd.TabStop(True)
+Gui.Form.txtEnd.TabIndex(3)
+Gui.Form.txtEnd.MaxLength(6)
+Gui.Form.txtEndName.Create(TextBox,"",True,1740,300,0,870,1830,True,0,"Arial",8,-2147483643,1)
+Gui.Form.txtEndName.TabStop(True)
+Gui.Form.txtEndName.TabIndex(4)
+Gui.Form.cmdBrowseEnd.Create(Button)
+Gui.Form.cmdBrowseEnd.Size(465,330)
+Gui.Form.cmdBrowseEnd.Position(2670,1815)
+Gui.Form.cmdBrowseEnd.TabStop(True)
+Gui.Form.cmdBrowseEnd.TabIndex(5)
+Gui.Form.cmdBrowseEnd.Caption("^")
+Gui.Form.cmdBrowseEnd.Event(Click,cmdBrowseEnd_Click)
+Gui.Form.gsSelection.Create(GsGridControl)
+Gui.Form.gsSelection.Size(3165,7590)
+Gui.Form.gsSelection.Position(105,2775)
+Gui.Form.gsSelection.Event(RowCellClick,gsSelection_RowCellClick)
+Gui.Form.cmdAdd.Create(Button)
+Gui.Form.cmdAdd.Size(735,375)
+Gui.Form.cmdAdd.Position(90,2265)
+Gui.Form.cmdAdd.Caption("Add")
+Gui.Form.cmdAdd.Event(Click,cmdAdd_Click)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+'BN, Dec 6, 2018
+'This project generates sales analysis report by vendor.
+'User will select a date range and a vendor range
+'The program will generate a dashboard and crystal report
+'Customer: Controlled Fluids, Inc
+
+F.Intrinsic.Control.Try
+	v.Local.sError.Declare
+	
+	f.ODBC.Connection!conx.OpenCompanyConnection
+	gui.Form.gsRpt.Anchor(15)
+	gui.Form.gsSelection.Anchor(7)
+	f.Intrinsic.Control.CallSub("Create_SelectionTB")
+	f.Intrinsic.Control.CallSub("Bind_SelectionGrid")
+	gui.Form..Show
+	
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)	
+F.Intrinsic.Control.EndTry	
+Program.Sub.Main.End
+
+Program.Sub.Create_SelectionTB.Start
+'Generate selection table to store the Vendor selection
+F.Intrinsic.Control.Try
+	v.Local.sError.Declare
+	
+	f.Intrinsic.Control.If(v.DataTable.Selection.Exists)
+		f.Data.DataTable.Close("Selection")
+	f.Intrinsic.Control.EndIf
+	f.Data.DataTable.Create("Selection",True)
+	f.Data.DataTable.AddColumn("Selection","Vendor","String")
+	f.Data.DataTable.AddColumn("Selection","Name","String")
+	f.Data.DataTable.AddColumn("Selection","Delete","String")
+		
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.CallSub("Unload")
+F.Intrinsic.Control.EndTry
+Program.Sub.Create_SelectionTB.End
+
+Program.Sub.Form_UnLoad.Start
+F.Intrinsic.Control.Try
+	v.Local.sError.Declare
+	f.Intrinsic.Control.CallSub("Unload")
+	
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)	
+F.Intrinsic.Control.EndTry
+Program.Sub.Form_UnLoad.End
+
+Program.Sub.cmdBrowseStart_Click.Start
+f.Intrinsic.Control.CallSub("Browser","Caller","Start")
+Program.Sub.cmdBrowseStart_Click.End
+
+Program.Sub.cmdBrowseEnd_Click.Start
+f.Intrinsic.Control.CallSub("Browser","Caller","End")
+Program.Sub.cmdBrowseEnd_Click.End
+
+Program.Sub.Browser.Start
+'Browser Vendor
+F.Intrinsic.Control.Try
+	v.Local..BulkDeclareString(sError,sRet)
+	
+	F.Intrinsic.UI.SetBrowserHotTypeAhead(True)
+	f.Intrinsic.UI.CommonBrowser(300,"",v.Local.sRet)
+	F.Intrinsic.Control.If(Variable.Local.sRet.IsCancel,=,False)
+		F.Intrinsic.String.Split(Variable.Local.sRet,"*!*",Variable.Local.sRet)
+		f.Intrinsic.Control.If(v.Args.Caller,=,"Start")
+			gui.Form.txtStart.Text(v.Local.sRet(0))
+			gui.Form.txtStartName.Text(v.Local.sRet(1))
+			gui.Form.txtEnd.Text(v.Local.sRet(0))
+			gui.Form.txtEndName.Text(v.Local.sRet(1))
+		f.Intrinsic.Control.ElseIf(v.Args.Caller,=,"End")
+			gui.Form.txtEnd.Text(v.Local.sRet(0))
+			gui.Form.txtEndName.Text(v.Local.sRet(1))		
+		f.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)	
+	f.Intrinsic.Control.CallSub("Unload")
+F.Intrinsic.Control.EndTry
+Program.Sub.Browser.End
+
+Program.Sub.cmdAdd_Click.Start
+'Add vendor range to the Selection table
+F.Intrinsic.Control.Try
+	V.Local.sError.Declare
+	v.Local.sSQL.Declare
+	v.Local.iCnt.Declare
+	
+	'Check Start and End
+	f.Intrinsic.Control.CallSub("Check_StartEnd","sCheckValue",v.Screen.Form!txtStart.Text.Trim)
+	f.Intrinsic.Control.If(v.Args.bExist.Not)
+		f.Intrinsic.UI.Msgbox("Start Vendor does not exist","Error")
+		f.Intrinsic.Control.ExitSub
+	f.Intrinsic.Control.EndIf
+	f.Intrinsic.Control.CallSub("Check_StartEnd","sCheckValue",v.Screen.Form!txtEnd.Text.Trim)
+	f.Intrinsic.Control.If(v.Args.bExist.Not)
+		f.Intrinsic.UI.Msgbox("End Vendor does not exist","Error")
+		f.Intrinsic.Control.ExitSub
+	f.Intrinsic.Control.EndIf
+	
+	'Get the range
+	f.Intrinsic.String.Build("Select Vendor,Replace(left(Name_Vendor,20),'''','''''') as Name_Vendor from V_Vendor_Master where Vendor between '{0}' and '{1}' order by Vendor",v.Screen.Form!txtStart.Text.Trim,v.Screen.Form!txtEnd.Text.Trim,v.Local.sSQL)
+	f.Data.DataTable.CreateFromSQL("AddedSelection","conx",v.Local.sSQL,True)
+	'Add the range to the current Selection DT
+	f.Intrinsic.Control.For(v.Local.iCnt,0,v.DataTable.AddedSelection.RowCount--,1)
+		f.Data.DataTable.AddRow("Selection","Vendor",v.DataTable.AddedSelection(v.Local.iCnt).Vendor!FieldValString,"Name",v.DataTable.AddedSelection(v.Local.iCnt).Name_Vendor!FieldValString,"Delete","Delete")
+	f.Intrinsic.Control.Next(v.Local.iCnt)
+	f.Data.DataTable.Close("AddedSelection")
+	'Make Selection dt distinct
+	f.Data.DataView.Create("Selection","SelectionDV",22,"","Vendor Asc")
+	f.Data.DataView.ToDataTableDistinct("Selection","SelectionDV","SelectionHold","Vendor*!*Name*!*Delete",True)
+	f.Data.DataView.Create("SelectionHold","SelectionHoldDV",22,"","Vendor Asc")
+	'Close old Selection
+	f.Data.DataTable.Close("Selection")
+	'Create new selection	
+	f.Data.DataView.ToDataTable("SelectionHold","SelectionHoldDV","Selection",True)
+	f.Data.DataTable.Close("SelectionHold")
+	'Binding
+	f.Intrinsic.Control.CallSub("Bind_SelectionGrid")
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)	
+	f.Intrinsic.Control.CallSub("Unload")
+F.Intrinsic.Control.EndTry
+Program.Sub.cmdAdd_Click.End
+
+Program.Sub.Check_StartEnd.Start
+F.Intrinsic.Control.Try
+	V.Local.sError.Declare
+	v.Local.sSQL.Declare
+	v.Local.sRet.Declare
+	v.Local.bExist.Declare
+	
+	f.Intrinsic.String.Build("Select * from V_Vendor_Master where Vendor = '{0}'",v.Args.sCheckValue,v.Local.sSQL)
+	f.ODBC.Connection!conx.ExecuteAndReturn(v.Local.sSQL,v.Local.sRet)
+	f.Intrinsic.Control.If(v.Local.sRet,<>,"")
+		v.Local.bExist.Set(True)
+	f.Intrinsic.Control.EndIf
+	f.Intrinsic.Variable.AddRV("bExist",v.Local.bExist)
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)	
+	f.Intrinsic.Control.CallSub("Unload")
+F.Intrinsic.Control.EndTry
+Program.Sub.Check_StartEnd.End
+
+Program.Sub.Bind_SelectionGrid.Start
+f.Intrinsic.Control.Try
+	v.Local.sError.Declare
+	
+	gui.Form.gsSelection.AddGridviewFromDatatable("GVSel","Selection")
+	f.Intrinsic.Control.CallSub("Format_gsSelection")
+	gui.Form.gsSelection.MainView("GVSel")
+	
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)	
+	f.Intrinsic.Control.CallSub("Unload")
+F.Intrinsic.Control.EndTry
+Program.Sub.Bind_SelectionGrid.End
+
+Program.Sub.Format_gsSelection.Start
+F.Intrinsic.Control.Try
+	V.Local.sError.Declare
+	
+	Gui.Form.gsRpt.SuspendLayout()	
+	'General format
+	Gui.Form.gsSelection.SetGridViewProperty("GVSel","AllowSort",True)
+	Gui.Form.gsSelection.SetGridViewProperty("GVSel","AllowFilter",True)
+	Gui.Form.gsSelection.SetGridViewProperty("GVSel","OptionsFindAlwaysVisible",True)
+	Gui.Form.gsSelection.SetGridViewProperty("GVSel","OptionsViewShowAutoFilterRow",True)
+	'Width
+	f.Intrinsic.Control.CallSub(FormatBulk,"GS","gsSelection","GV","GVSel","sInputColumns","Delete","sProperty","Width","sWidth","35")
+	f.Intrinsic.Control.CallSub(FormatBulk,"GS","gsSelection","GV","GVSel","sInputColumns","Vendor,Delete","sProperty","Width","sWidth","45")
+	'Row cell click
+	f.Intrinsic.Control.CallSub(FormatBulk,"GS","gsSelection","GV","GVSel","sInputColumns","Delete","sProperty","For_RowCell_Click")
+	'Editor button
+	gui.Form.gsSelection.ColumnEdit("GVSel","Delete","editorbutton","Delete")	
+
+	gui.Form.gsSelection.ResumeLayout()
+	
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.CallSub("Unload")
+F.Intrinsic.Control.EndTry
+Program.Sub.Format_gsSelection.End
+
+Program.Sub.gsSelection_RowCellClick.Start
+f.Intrinsic.Control.Try
+	v.Local.sError.Declare
+	f.Intrinsic.Control.If(v.Args.Column,=,"Delete")
+		f.Data.DataTable.DeleteRow("Selection",v.Args.RowIndex)
+		f.Data.DataTable.AcceptChanges("Selection")
+	f.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub("Unload") 
+F.Intrinsic.Control.EndTry
+Program.Sub.gsSelection_RowCellClick.End
+
+Program.Sub.cmdRunReport_Click.Start
+F.Intrinsic.Control.Try
+	V.Local.sError.Declare
+	v.Local.sSQL.Declare
+	v.Local.sRet.Declare	
+	v.Local.sStart.Declare
+	v.Local.sEnd.Declare
+	v.Local.sVendname.Declare
+	v.Local.sVendorClause.Declare
+
+	gui.Form..Visible(False)
+	f.Intrinsic.UI.InvokeWaitDialog("Processing...")
+	
+	'Format start date, end date
+	f.Intrinsic.String.Format(v.Screen.Form!dtpStartDate.Value,"YYYY-MM-DD",v.Local.sStart)
+	f.Intrinsic.String.Format(v.Screen.Form!dtpEndDate.Value,"YYYY-MM-DD",v.Local.sEnd)	
+
+	'Get vendors selection
+	f.Intrinsic.Control.If(v.Screen.Form!chkAllVendor.Value,=,0)
+		'Check all is not checked
+		f.Intrinsic.Control.If(v.DataTable.Selection.RowCount,>,0)
+			f.Data.DataView.Create("Selection","SelectionToRunDV",22,"","Name Asc")
+			f.Data.DataView.ToString("Selection","SelectionToRunDV","Name","","','",v.Local.sVendName)
+			f.Intrinsic.String.Build(" and i.Name_Vendor in ('{0}')",v.Local.sVendname,v.Local.sVendorClause)
+			f.Data.DataView.Close("Selection","SelectionToRunDV")
+		f.Intrinsic.Control.Else
+			f.Intrinsic.UI.Msgbox("No Vendor selection is made","Error")
+			f.Intrinsic.Control.ExitSub
+		f.Intrinsic.Control.EndIf	
+	f.Intrinsic.Control.Else
+		'Check all is checked
+		v.Local.sVendorClause.Set("and IsNull(i.Name_Vendor,'') <> ''")
+	f.Intrinsic.Control.EndIf	
+	
+	f.Intrinsic.Control.If(v.DataTable.Sales.Exists)
+		f.Data.DataTable.Close("Sales")
+	f.Intrinsic.Control.EndIf
+ 	f.Intrinsic.String.Build("select  i.Name_vendor,ORDER_NO,ORDER_LINE,Customer,CUSTOMER_SHIP,DATE_ORDER, NAME_CUST_SHIP,ADDRESS1_SHIP,ADDRESS2_SHIP,ADDRESS3_SHIP,CITY_SHIP,STATE_SHIP,ZIP_SHIP, CUSTOMER_PO,o.Part,o.LOCATION,Description,PRODUCT_LINE,CUSTOMER_PART,QTY_SHIPPED,PRICE,Extension,INVOICE,ORDER_SUFFIX,SALESPERSON,LINE_TYPE,ATTENTION_SHIP,ADDRESS4_SHIP,ADDRESS5_SHIP,COUNTRY_SHIP,DATE_SHIPPED,DATE_INVOICE,QTY_ORDERED,QTY_BO from v_Order_hist_line o left join V_Inventory_mst2 i on o.Part = i.Part and o.Location = i.Location where Date_Order between '{0}' and '{1}' {2} Order by  i.Name_Vendor",v.Local.sStart,v.Local.sEnd,v.Local.sVendorClause,V.Local.sSQL) 	
+ 	
+	f.Data.DataTable.CreateFromSQL("Sales","conx",v.Local.sSQL,True)
+	f.Data.DataTable.AddColumn("Sales","TRMNL","String",v.Caller.Terminal)
+	
+	'Delete GCG_5299_Sales_Rpt by TRMNL
+	F.Intrinsic.String.Build("Delete from GCG_5299_Sales_Rpt Where TRMNL = '{0}'",V.Caller.Terminal,V.Local.sSQL)
+	F.ODBC.Connection!conx.Execute(v.Local.sSQL)
+		
+	'Set series
+	f.Data.DataTable.AddColumn("Sales","Num","long")
+	f.Data.DataTable.SetSeries("Sales","Num",1,1)
+	f.Data.DataTable.SaveToDB("Sales","conx","GCG_5299_Sales_Rpt","",128)
+	
+	f.Intrinsic.UI.CloseWaitDialog
+	gui.Form.gsRpt.AddGridviewFromDatatable("GVMain","Sales")
+	
+	f.Intrinsic.Control.CallSub("Format_gsSales")
+	gui.Form.gsRpt.MainView("GVMain")	
+	gui.Form..Show
+	
+	'Will not run the crystal report if Crystal checkbox is not checked
+	f.Intrinsic.Control.If(v.Screen.Form!chkCrystal.Value,=,0)
+		f.Intrinsic.Control.ExitSub
+	f.Intrinsic.Control.EndIf
+	
+	'Call BI report
+	f.Intrinsic.Control.CallSub("Print_Report","StartDate",v.Local.sStart,"EndDate",v.Local.sEnd)	
+	
+	
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.CallSub("Form_Unload")
+F.Intrinsic.Control.EndTry
+Program.Sub.cmdRunReport_Click.End
+
+Program.Sub.Format_gsSales.Start
+F.Intrinsic.Control.Try
+	V.Local.sError.Declare
+	
+	Gui.Form.gsRpt.SuspendLayout()	
+	Gui.Form.gsRpt.SetGridViewProperty("GVMain","AllowSort",True)
+	Gui.Form.gsRpt.SetGridViewProperty("GVMain","AllowFilter",True)
+	Gui.Form.gsRpt.SetGridViewProperty("GVMain","OptionsFindAlwaysVisible",True)
+	Gui.Form.gsRpt.SetGridViewProperty("GVMain","EnableAppearanceOddRow",False)
+	Gui.Form.gsRpt.SetGridViewProperty("GVMain","OptionsViewShowAutoFilterRow",True)
+		 
+	'Caption
+	f.Intrinsic.Control.CallSub(FormatBulk,"GS","gsRpt","GV","GVMain","sInputColumns","Name_Vendor@!@Vendor,Order_No@!@Order,Order_Line@!@Line,Customer_Ship@!@Ship Customer,Date_Order@!@Date Order,Name_Cust_Ship@!@Ship Customer Name,ADDRESS1_SHIP@!@Address 1,ADDRESS2_SHIP@!@Address 2,City_Ship@!@City,State_Ship@!@State,Zip_Ship@!@Zip,State_Ship@!@State,Qty_Shipped@!@Qty Shipped,Price@!@Price","sProperty","Caption")	
+	f.Intrinsic.Control.CallSub(FormatBulk,"GS","gsRpt","GV","GVMain","sInputColumns","Num,Name_vendor,ORDER_NO,ORDER_LINE,CUSTOMER,CUSTOMER_SHIP,DATE_ORDER,NAME_CUST_SHIP,ADDRESS1_SHIP,ADDRESS2_SHIP,CITY_SHIP,STATE_SHIP,ZIP_SHIP,PART,LOCATION,DESCRIPTION,QTY_SHIPPED,PRICE,EXTENSION","sProperty","VisibleIndex")
+'	'Width
+	f.Intrinsic.Control.CallSub(FormatBulk,"GS","gsRpt","GV","GVMain","sInputColumns","Order_Line,State_Ship,Location,Product_Line,Num","sProperty","Width","sWidth","40")
+	f.Intrinsic.Control.CallSub(FormatBulk,"GS","gsRpt","GV","GVMain","sInputColumns","City_Ship,Zip_Ship","sProperty","Width","sWidth","60")
+	f.Intrinsic.Control.CallSub(FormatBulk,"GS","gsRpt","GV","GVMain","sInputColumns","Order_No,Customer,Customer_Ship","sProperty","Width","sWidth","70")
+	f.Intrinsic.Control.CallSub(FormatBulk,"GS","gsRpt","GV","GVMain","sInputColumns","Qty_Ordered,Qty_Bo,Qty_Shipped,Price,Extension","sProperty","MinWidth","sWidth","80")
+	f.Intrinsic.Control.CallSub(FormatBulk,"GS","gsRpt","GV","GVMain","sInputColumns","Date_Order,Date_Shipped,Date_Invoice","sProperty","MinWidth","sWidth","80")
+	f.Intrinsic.Control.CallSub(FormatBulk,"GS","gsRpt","GV","GVMain","sInputColumns","Name_Vendor,Name_Cust_Ship","sProperty","Width","sWidth","150")
+	f.Intrinsic.Control.CallSub(FormatBulk,"GS","gsRpt","GV","GVMain","sInputColumns","ADDRESS1_SHIP,ADDRESS2_SHIP,ADDRESS3_SHIP,ADDRESS4_SHIP,ADDRESS5_SHIP","sProperty","MinWidth","sWidth","100")
+	f.Intrinsic.Control.CallSub(FormatBulk,"GS","gsRpt","GV","GVMain","sInputColumns","Customer_PO,Part,Customer_Part","sProperty","MinWidth","sWidth","120")
+	f.Intrinsic.Control.CallSub(FormatBulk,"GS","gsRpt","GV","GVMain","sInputColumns","Description,Customer_PO,Part,Customer_Part","sProperty","MinWidth","sWidth","160")	
+	'Invisible	
+	f.Intrinsic.Control.CallSub(FormatBulk,"GS","gsRpt","GV","GVMain","sInputColumns","INVOICE,ORDER_SUFFIX,SALESPERSON,LINE_TYPE,ATTENTION_SHIP,ADDRESS3_SHIP,ADDRESS4_SHIP,ADDRESS5_SHIP,COUNTRY_SHIP,DATE_SHIPPED,DATE_INVOICE,QTY_ORDERED,QTY_BO,Product_Line,CUSTOMER_PART,CUSTOMER_PO","sProperty","Invisible")
+	'Summary
+	f.Intrinsic.Control.CallSub(FormatBulk,"GS","gsRpt","GV","GVMain","sInputColumns","Extension","sProperty","SummaryItem")
+	'Header bold
+	f.Intrinsic.Control.CallSub(FormatBulk,"GS","gsRpt","GV","GVMain","sInputColumns","Num,Name_vendor,ORDER_NO,ORDER_LINE,CUSTOMER,CUSTOMER_SHIP,DATE_ORDER,NAME_CUST_SHIP,ADDRESS1_SHIP,ADDRESS2_SHIP,CITY_SHIP,STATE_SHIP,ZIP_SHIP,PART,LOCATION,DESCRIPTION,QTY_SHIPPED,PRICE,EXTENSION","sProperty","HeaderFontBold")
+	'Decimal
+	f.Intrinsic.Control.CallSub(FormatBulk,"GS","gsRpt","GV","GVMain","sInputColumns","Qty_Ordered,Qty_Bo,Qty_Shipped,Price,Extension","sProperty","Decimal_1")
+	'Date
+	Gui.Form.gsRpt.SetColumnProperty("GVMain","Date_Order","DisplayCustomDatetime","d")
+	Gui.Form.gsRpt.SetColumnProperty("GVMain","Date_Shipped","DisplayCustomDatetime","d")
+	Gui.Form.gsRpt.SetColumnProperty("GVMain","Date_Invoice","DisplayCustomDatetime","d")
+	gui.Form.gsRpt.ResumeLayout()
+	
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.CallSub("Unload")
+F.Intrinsic.Control.EndTry
+Program.Sub.Format_gsSales.End
+
+Program.Sub.FormatBulk.Start
+f.Intrinsic.Control.Try
+	V.Local..BulkDeclareString(sError,sColumns,sHold)
+	v.Local..BulkDeclareLong(iCnt)
+	
+	f.Intrinsic.String.Split(v.Args.sInputColumns,",",v.Local.sColumns)
+	f.Intrinsic.Control.For(v.Local.iCnt,0,v.Local.sColumns.UBound,1)
+		F.Intrinsic.Control.SelectCase(v.Args.sProperty)
+			F.Intrinsic.Control.Case("MinWidth")
+				gui.Form.[v.Args.GS].SetColumnProperty(v.Args.GV,v.Local.sColumns(v.Local.iCnt),"MinWidth",v.Args.sWidth)
+			F.Intrinsic.Control.Case("MaxWidth")
+				gui.Form.[v.Args.GS].SetColumnProperty(v.Args.GV,v.Local.sColumns(v.Local.iCnt),"MaxWidth",v.Args.sWidth)
+			F.Intrinsic.Control.Case("Width")
+				gui.Form.[v.Args.GS].SetColumnProperty(v.Args.GV,v.Local.sColumns(v.Local.iCnt),"MinWidth",v.Args.sWidth)
+				gui.Form.[v.Args.GS].SetColumnProperty(v.Args.GV,v.Local.sColumns(v.Local.iCnt),"MaxWidth",v.Args.sWidth)
+			F.Intrinsic.Control.Case("Invisible")
+				gui.Form.[v.Args.GS].SetColumnProperty(v.Args.GV,v.Local.sColumns(v.Local.iCnt),"Visible",False)
+			F.Intrinsic.Control.Case("VisibleIndex")
+				gui.Form.[v.Args.GS].SetColumnProperty(v.Args.GV,v.Local.sColumns(v.Local.iCnt),"VisibleIndex",v.Local.iCnt)
+			F.Intrinsic.Control.Case("Caption")
+				f.Intrinsic.String.Split(v.Local.sColumns(v.Local.iCnt),"@!@",v.Local.sHold)
+				gui.Form.[v.Args.GS].SetColumnProperty(v.Args.GV,v.Local.sHold(0),"Caption",v.Local.sHold(1))
+			F.Intrinsic.Control.Case("HeaderAllign_Far")
+				gui.Form.[v.Args.GS].SetColumnProperty(v.Args.GV,v.Local.sColumns(v.Local.iCnt),"HeaderHAlignment","Far")
+			F.Intrinsic.Control.Case("HeaderFontBold")	
+				gui.Form.[v.Args.GS].SetColumnProperty(v.Args.GV,v.Local.sColumns(v.Local.iCnt),"HeaderFontBold",True)
+			F.Intrinsic.Control.Case("Decimal_1")	
+				gui.Form.[v.Args.GS].SetColumnProperty(v.Args.GV,v.Local.sColumns(v.Local.iCnt),"DisplayCustomNumeric","###,###,###,##0.00")
+			f.Intrinsic.Control.Case("CellBackColor")
+				gui.Form.[v.Args.GS].SetColumnProperty(v.Args.GV,v.Local.sColumns(v.Local.iCnt),"CellBackColor",v.Args.sColor)
+			f.Intrinsic.Control.Case("For_CellValue_Changed")
+				gui.Form.[v.Args.GS].SetColumnProperty(v.Args.GV,v.Local.sColumns(v.Local.iCnt),"AllowEdit",True)	
+				gui.Form.[v.Args.GS].SetColumnProperty(v.Args.GV,v.Local.sColumns(v.Local.iCnt),"ReadOnly",False)
+			f.Intrinsic.Control.Case("For_RowCell_Click")
+				gui.Form.[v.Args.GS].SetColumnProperty(v.Args.GV,v.Local.sColumns(v.Local.iCnt),"AllowEdit",False)	
+				gui.Form.[v.Args.GS].SetColumnProperty(v.Args.GV,v.Local.sColumns(v.Local.iCnt),"ReadOnly",True)
+			f.Intrinsic.Control.Case("FixedColumn_Left")
+				gui.Form.[v.Args.GS].SetColumnProperty(v.Args.GV,v.Local.sColumns(v.Local.iCnt),"Fixed","Left")
+			f.Intrinsic.Control.Case("SummaryItem")
+				f.Intrinsic.String.Build("Sum_{0}",v.Local.sColumns(v.Local.iCnt),v.Local.sHold)
+				gui.Form.[v.Args.GS].AddSummaryItem(v.Args.GV,v.Local.sColumns(v.Local.iCnt),v.Local.sHold,"Sum","","","n")
+			F.Intrinsic.Control.EndSelect		
+	f.Intrinsic.Control.Next(v.Local.iCnt)
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}GAB Version: {5}}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.CallSub("Unload")
+F.Intrinsic.Control.EndTry
+Program.Sub.FormatBulk.End
+
+Program.Sub.Print_Report.Start
+f.Intrinsic.Control.Try
+	v.Local..BulkDeclareLong(iBIRunID,iRptID,iBILogID)
+	v.Local..BulkDeclareString(sError,sVal)
+		
+		f.Intrinsic.UI.InvokeWaitDialog("Generating report...")	
+		'Log Report
+		F.Global.BI.GetRunID(v.Local.iBIRunID)
+		f.Global.BI.GetIDFromName("GCG_5299_Sales.rpt",True,v.Local.iRptID)
+		F.Global.BI.StartLogging(v.Local.iBIRunID,v.Local.iRptID,-1,"",v.Local.iBILogID)	
+		'Stop Logging
+		F.Global.BI.StopLogging(v.Local.iBILogID)
+		f.Intrinsic.String.Build("{0}*!*{1} - {2}",v.Caller.Terminal,v.Args.StartDate,v.Args.EndDate,v.Local.sVal)
+		
+		f.Intrinsic.UI.CloseWaitDialog
+		F.Global.BI.RunReportPreProcessor(v.Local.iBIRunID,v.Local.iBILogID,"TRMNL*!*DateRange",V.Local.sVal,"",-1,True,"",-1,"",-1,"","",v.Local.iBIRunID)
+	
+	f.Intrinsic.UI.CloseWaitDialog
+	
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.CallSub("Form_Unload")
+F.Intrinsic.Control.EndTry
+Program.Sub.Print_Report.End
+
+Program.Sub.cmdExportExcel_Click.Start
+F.Intrinsic.Control.Try
+	V.Local.sError.Declare
+	
+	V.Local.sFileExport.Declare
+	V.Local.bExcel.Declare
+	V.Local.bFileLocked.Declare
+	V.Local.sMsg.Declare
+
+	F.Automation.MSExcel.CheckPresence(V.Local.bExcel)
+
+	F.Intrinsic.Control.If(V.Local.bExcel)
+		F.Intrinsic.String.Build("{0}\GCG_5370_Commission{1}.xlsx",V.Caller.LocalGssTempDir,v.Ambient.Now.FormatMMDDYYYYHhNnSs,V.Local.sFileExport)
+		F.Intrinsic.File.IsFileLocked(V.Local.sFileExport,V.Local.bFileLocked)
+		F.Intrinsic.Control.If(V.Local.bFileLocked)
+			F.Intrinsic.String.Build("File is already open. Please close and export again.{0}File: {1}",V.Ambient.NewLine,V.Local.sFileExport,V.Local.sMsg)
+			F.Intrinsic.UI.Msgbox(V.Local.sMsg,"File In Use")
+		F.Intrinsic.Control.Else
+			Gui.Form.gsRpt.Export(V.Local.sFileExport,"xlsx")
+			F.Intrinsic.Task.ShellExec(0,"",V.Local.sFileExport,"","",1)
+		F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.Else
+		F.Intrinsic.String.Build("{0}\GCG_5370_Commission{1}.csv",V.Caller.LocalGssTempDir,v.Ambient.Now.FormatMMDDYYYYHhNnSs,V.Local.sFileExport)
+		F.Intrinsic.File.IsFileLocked(V.Local.sFileExport,V.Local.bFileLocked)
+		F.Intrinsic.Control.If(V.Local.bFileLocked)
+			F.Intrinsic.String.Build("File is already open. Please close and export again.{0}File: {1}",V.Ambient.NewLine,V.Local.sFileExport,V.Local.sMsg)
+			F.Intrinsic.UI.Msgbox(V.Local.sMsg,"File In Use")
+		F.Intrinsic.Control.Else
+			Gui.Form.gsRpt.Export(V.Local.sFileExport,"csv")
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.Task.ShellExec(0,"",V.Local.sFileExport,"","",1)
+	F.Intrinsic.Control.EndIf		
+	
+	F.Intrinsic.Control.Catch
+		F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+		F.Intrinsic.UI.Msgbox(V.Local.sError)
+		F.Intrinsic.Control.End 
+	F.Intrinsic.Control.EndTry
+Program.Sub.cmdExportExcel_Click.End
+
+Program.Sub.Unload.Start
+f.Intrinsic.Control.Try
+	v.Local.sError.Declare
+	
+	f.Intrinsic.Control.If(v.ODBC.conx.State,=,1)
+		f.ODBC.Connection!conx.Close
+	f.Intrinsic.Control.EndIf
+	f.Intrinsic.Control.End
+	
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+F.Intrinsic.Control.EndTry
+Program.Sub.Unload.End
+
+Program.Sub.Comments.Start
+${$0$}$$}$$}$12:00:00 AM$}$False
+Program.Sub.Comments.End
